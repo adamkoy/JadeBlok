@@ -1,3 +1,1 @@
-# jadeblock
-# JadeBlock
 # JadeBlok
