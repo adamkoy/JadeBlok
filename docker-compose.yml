@@ -1,0 +1,39 @@
+version: '3'
+services:
+        web01:
+                build: ./app
+                image: jadeblok
+                ports:
+                        - "80:80"
+                volumes:
+                        - "./app/src/classes:/var/www/classes:ro"
+                        - "./app/src/html:/var/www/html:ro"
+                        - "./app/src/templates:/var/www/templates:ro"
+                tmpfs: 
+                        - "/var/www/templates_c:gid=33,uid=33"
+                environment:
+                        CHRONICLE_HOST: chronicle01
+                        CHRONICLE_CLIENTID: "YQtYqY-xbz1lOgJ3gMq-oaDCLIQgmCbt"
+                        CHRONICLE_PRIVATEKEY: "DQdEUbfgWjpLPD6jqr_gcXIBa1WzcNDup9FxvAj_AhBDSy7D0ky-X72zXZIHg0ZwES_H_hEWf4dv9Sr1E5rcUA=="
+                        CHRONICLE_PUBLICKEY: "Q0suw9JMvl-9s12SB4NGcBEvx_4RFn-Hb_Uq9ROa3FA="
+                        JADEBLOK_HMAC_KEY: "5GFJkrdE6DvybR4qzmGkCYajD6KLQpm2Sr3fWDCu"
+
+        chronicle01:
+                build: ./chronicle
+                image: chronicle
+                depends_on:
+                        - db01
+                environment:
+                        POSTGRES_HOST: "db01"
+                        POSTGRES_USER: "chronicle"
+                        POSTGRES_PASSWORD: "19c8d80d-2d5b-4a3b-973a-e33766dc43d8"
+                        CHRONICLE_ADMIN_ID: "YQtYqY-xbz1lOgJ3gMq-oaDCLIQgmCbt"
+                        CHRONICLE_ADMIN_PUBLICKEY: "Q0suw9JMvl-9s12SB4NGcBEvx_4RFn-Hb_Uq9ROa3FA="
+
+        db01:
+                image: postgres
+                ports:
+                        - "5432"
+                environment:
+                        POSTGRES_USER: "chronicle"
+                        POSTGRES_PASSWORD: "19c8d80d-2d5b-4a3b-973a-e33766dc43d8"
